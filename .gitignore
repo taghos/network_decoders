@@ -1,6 +1,9 @@
+# Vim stuff.
+*~
+.sw[op]
+
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
-*.o
-*.a
+*.[ao]
 *.so
 
 # Folders
@@ -19,6 +22,5 @@ _cgo_export.*
 
 _testmain.go
 
-*.exe
 *.test
 *.prof
