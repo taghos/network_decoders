@@ -26,6 +26,9 @@ type IPv4 struct {
 	OptionsLen	uint
 	// Length of the complete IPv4 header.
 	HeaderLen	uint
+
+	DontFragment	bool
+	MoreFragments	bool
 }
 
 
@@ -50,6 +53,9 @@ func (ipv4 *IPv4) Decode(raw []byte) (err error) {
 	ipv4.Identification = (uint16(raw[4]) << 8) + uint16(raw[5])
 
 	ipv4.Flags = uint16(raw[6] >> 5)
+	ipv4.DontFragment = (ipv4.Flags & 0x2) != 0
+	ipv4.MoreFragments = (ipv4.Flags & 0x4) != 0
+
 	ipv4.FragmentOffset = (uint16(raw[6] & 0x1F) << 8) + uint16(raw[7])
 
 	ipv4.TTL = uint16(raw[8])
