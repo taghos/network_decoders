@@ -5,6 +5,20 @@ import (
 )
 
 
+// TCP flags, combined, from least to most significant.
+const (
+	FIN = 1 << iota
+	SYN
+	RST
+	PSH
+	ACK
+	URG
+	ECE
+	CWR
+	NS
+)
+
+
 // A standard TCP header, followed by a number of convenience attributes.
 type TCP struct {
 	SrcPort		uint16
@@ -32,6 +46,9 @@ type TCP struct {
 	SYN		uint
 	// Finished sending
 	FIN		uint
+
+	// All flags combined
+	Flags		uint
 
 	WindowSize	uint16
 	Checksum	uint16
@@ -79,6 +96,8 @@ func (tcp *TCP) Decode(raw []byte, parseopt bool) (err error) {
 	tcp.RST = (uint(raw[13]) >> 2) & 0x1
 	tcp.SYN = (uint(raw[13]) >> 1) & 0x1
 	tcp.FIN = uint(raw[13]) & 0x1
+
+	tcp.Flags = (tcp.NS << 8) | uint(raw[13])
 
 	tcp.WindowSize = (uint16(raw[14]) << 8) + uint16(raw[15])
 	tcp.Checksum = (uint16(raw[16]) << 8) + uint16(raw[17])
